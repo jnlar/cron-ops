@@ -13,6 +13,8 @@ class S3Bucket:
     
 class BucketOperations:
     """
+    Bucket operations.
+
     References: 
         - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-uploading-files.html
         - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-example-download-file.html
