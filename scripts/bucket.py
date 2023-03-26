@@ -12,31 +12,40 @@ class S3Bucket:
         return self.s3.Bucket(self.bucket_name)
     
 class BucketOperations:
+    """
+    References: 
+        - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-uploading-files.html
+        - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-example-download-file.html
+    """
     def __init__(self, bucket_name):
         self.bucket = S3Bucket(bucket_name).get_bucket()
 
-    def upload(self, file_name, object_name = None):
-        """
-        Upload a file to the S3 bucket
-
-        Reference: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-uploading-files.html
-        """
-        if object_name is None:
-            object_name = os.path.basename(file_name)
-
+    def run(self, operation, args = None):
         try:
-            self.bucket.upload_file(file_name, object_name)
+            operation(*args)
         except ClientError as e:
             logging.error(e)
             return False
 
         return True
 
-    def download(self, file_name):
-        self.bucket.download_file(file_name, file_name)
+    def upload(self, file_name, object_name = None):
+        if object_name is None:
+            object_name = os.path.basename(file_name)
+
+        return self.run(self.bucket.upload_file, (file_name, object_name))
+
+    def download(self, file_name, object_name = None):
+        if object_name is None:
+            object_name = os.path.basename(file_name)
+
+        return self.run(self.bucket.download_file, (object_name, file_name))
+
 
     def list(self):
-        return self.bucket.objects.all()
+        for object in self.bucket.objects.all():
+            print(object.key)
 
     def delete(self, file_name):
-        self.bucket.Object(file_name).delete()
+        # FIXME
+        pass
