@@ -28,8 +28,12 @@ class UploadCommand:
 
         op = bucket.BucketOperations(args.bucket_name)
 
+        if args.file[-1] == '/':
+            args.file = args.file[:-1] # Remove trailing slashes 
+        
         file = os.path.basename(args.file).split('/')[-1]
         tmp = "/tmp/{}.zip".format(file)
+        # FIXME: print the output of the zip command
         proc = subprocess.run(['zip', '-r', tmp , args.file], capture_output=True)
 
         if proc.returncode != 0:
