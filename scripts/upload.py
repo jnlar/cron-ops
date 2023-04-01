@@ -32,7 +32,7 @@ class UploadCommand:
             args.file = args.file[:-1] # Remove trailing slashes 
         
         file = os.path.basename(args.file).split('/')[-1]
-        tmp = "/tmp/{}.tar.gz".format(file)
+        tmp = "/tmp/{}.tar.bz2".format(file)
         proc = subprocess.run(['tar', '-cvjf', tmp, args.file], capture_output=True)
 
         if proc.returncode != 0:
@@ -41,7 +41,7 @@ class UploadCommand:
             return False
 
         if args.file:
-            op.upload(tmp, "{}/{}".format(args.object, "{}.zip".format(file)))
+            op.upload(tmp, "{}/{}".format(args.object, "{}.tar.bz2".format(file)))
             proc = subprocess.run(['rm', '-f', tmp], capture_output=True)
         else:
             op.upload(args.object)
