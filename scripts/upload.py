@@ -16,25 +16,24 @@ Example:
 class UploadCommand:
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Upload a file to the S3 bucket')
-        self.parser.add_argument('--bucket', '-b', dest='bucket_name', help='The name of the S3 bucket')
+        self.parser.add_argument('--bucket', '-b', dest='_bucket', help='ARN for s3 bucket or bucket name')
         self.parser.add_argument('--object', '-o', dest='object', help='Object path')
         self.parser.add_argument('--file', '-f', dest='file', help='File path')
 
     def run(self):
         args = self.parser.parse_args()
 
-        if not args.bucket_name or not args.object or not args.file:
+        if not args._bucket or not args.object or not args.file:
             return self.parser.print_help()
 
-        op = bucket.BucketOperations(args.bucket_name)
+        op = bucket.BucketOperations(args._bucket)
 
         if args.file[-1] == '/':
             args.file = args.file[:-1] # Remove trailing slashes 
         
         file = os.path.basename(args.file).split('/')[-1]
-        tmp = "/tmp/{}.zip".format(file)
-        # FIXME: print the output of the zip command
-        proc = subprocess.run(['zip', '-r', tmp , args.file], capture_output=True)
+        tmp = "/tmp/{}.tar.gz".format(file)
+        proc = subprocess.run(['tar', '-cvjf', tmp, args.file], capture_output=True)
 
         if proc.returncode != 0:
             logging.error("Failed to compress {}".format(args.file))
