@@ -1,8 +1,9 @@
-import bucket
 import argparse
-import subprocess
-import os
+import bucket
+import datetime as d
 import logging
+import os
+import subprocess
 
 """
 Upload a file to the S3 bucket.
@@ -31,7 +32,7 @@ class UploadCommand:
         if args.file[-1] == '/':
             args.file = args.file[:-1] # Remove trailing slashes 
         
-        file = os.path.basename(args.file).split('/')[-1]
+        file = "{}-{}".format(d.date.today(), os.path.basename(args.file).split('/')[-1])
         tmp = "/tmp/{}.tar.bz2".format(file)
         proc = subprocess.run(['tar', '-cvjf', tmp, args.file], capture_output=True)
 
@@ -41,6 +42,8 @@ class UploadCommand:
             return False
 
         if args.file:
+            # Strip trailing slash for object path as it will be added in op.upload
+            args.object = args.object[:-1] if args.object[-1] == '/' else args.object
             op.upload(tmp, "{}/{}".format(args.object, "{}.tar.bz2".format(file)))
             proc = subprocess.run(['rm', '-f', tmp], capture_output=True)
         else:
