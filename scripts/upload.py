@@ -42,6 +42,7 @@ class UploadCommand:
         args = self.parser.parse_args()
         op = bucket.BucketOperations(args._bucket)
         args.file = self.clean(args.file)
+        datetime = d.datetime.now().strftime('%Y%M%d-%H%M%S')
 
         # Only support uploading files for now
         if not args.file:
@@ -55,7 +56,7 @@ class UploadCommand:
         elif os.path.isdir(args.file):
             basename = os.path.basename(args.file)
             dirname = os.path.dirname(args.file)
-            file = "{}-{}".format(d.date.today(), basename)
+            file = "{}-{}".format(basename, datetime)
             tmp = "/tmp/{}.tar.bz2".format(file)
 
             cmd = ['tar', '-cvjf', tmp, '-C', dirname, basename]
