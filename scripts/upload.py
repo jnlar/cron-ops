@@ -26,11 +26,8 @@ class UploadCommand:
 
         return self
 
-    def clean(self, path):
-        return path[:-1] if path[-1] == '/' else path
-
     def proc(self, cmd, options=None):
-        # TODO: Log errors and put it somewhere
+        # TODO: Log errors and put it somewhere.
         try:
             subprocess.run(cmd, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
@@ -38,31 +35,38 @@ class UploadCommand:
 
             return False
 
+    def clean(self, path):
+        # This is to ensure that an '/' object in s3 isn't created.
+        return path[:-1] if path[-1] == '/' else path
+
     def run(self):
         args = self.parser.parse_args()
         op = bucket.BucketOperations(args._bucket)
-        args.file = self.clean(args.file)
         datetime = d.datetime.now().strftime('%Y%M%d-%H%M%S')
 
-        # Only support uploading files for now
+        # Only support uploading files for now.
         if not args.file:
             return self.parser.print_help()
 
-        if os.path.exists(args.file) is False:
-            return self.logger.error("File or directory does not exist: {}".format(args.file))
+        if os.path.exists(file.args) is False:
+            return self.logger.error("File or directory does not exist: {}".format(file.args))
+
+        for type in ['file', 'object']:
+            setattr(args, type, self.clean(getattr(args, type)))
 
         if os.path.isfile(args.file):
-            op.upload(args.file, "{}/{}".format(self.clean(args.object), args.file))
+            op.upload(args.file, "{}/{}".format(args.object, args.file))
         elif os.path.isdir(args.file):
             basename = os.path.basename(args.file)
             dirname = os.path.dirname(args.file)
             file = "{}-{}".format(basename, datetime)
+            # Write and upload from /tmp, for good reasons: https://unix.stackexchange.com/a/137889
             tmp = "/tmp/{}.tar.bz2".format(file)
 
-            cmd = ['tar', '-cvjf', tmp, '-C', dirname, basename]
-            self.proc(cmd)
+            # Only archive the basename, not the full path.
+            self.proc(['tar', '-cvjf', tmp, '-C', dirname, basename])
 
-            op.upload(tmp, "{}/{}".format(self.clean(args.object), "{}.tar.bz2".format(file)))
+            op.upload(tmp, "{}/{}".format(args.object, "{}.tar.bz2".format(file)))
             self.proc(['rm', '-f', tmp])
 
 if __name__ == '__main__':
