@@ -42,7 +42,7 @@ class UploadCommand:
     def run(self):
         args = self.parser.parse_args()
         op = bucket.BucketOperations(args._bucket)
-        datetime = d.datetime.now().strftime('%Y%M%d-%H%M%S')
+        datetime = d.datetime.now().strftime('%Y%m%d-%H%M%S')
 
         # Only support uploading files for now.
         if not args.file:
