@@ -48,8 +48,8 @@ class UploadCommand:
         if not args.file:
             return self.parser.print_help()
 
-        if os.path.exists(file.args) is False:
-            return self.logger.error("File or directory does not exist: {}".format(file.args))
+        if os.path.exists(args.file) is False:
+            return self.logger.error("File or directory does not exist: {}".format(args.file))
 
         for type in ['file', 'object']:
             setattr(args, type, self.clean(getattr(args, type)))
