@@ -43,11 +43,14 @@ class BucketOperations:
 
         return self.run(self.bucket.download_file, (object_name, file_name))
 
+    def get_object(self, object_name):
+        return self.bucket.Object(object_name).get()
 
-    def list(self):
-        for object in self.bucket.objects.all():
-            print(object.key)
+    def list(self, prefix=False):
+        if prefix:
+            return self.bucket.objects.filter(Prefix=prefix)
+        
+        return self.bucket.objects.all()
 
-    def delete(self, file_name):
-        # FIXME
-        pass
+    def delete(self, object):
+        return self.run(self.bucket.Object(object).delete)
