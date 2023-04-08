@@ -28,7 +28,7 @@ class CleanCommand:
             object = op.get_object(file.key)
 
             last_modified = object['LastModified']
-            limit = datetime.now() - timedelta(days=args.limit)
+            limit = datetime.now() - timedelta(days=int(args.limit))
 
             # Use timestamps to avoid offset naive vs offset aware issues. 
             if last_modified.timestamp() < limit.timestamp():

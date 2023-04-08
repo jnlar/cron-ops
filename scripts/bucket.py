@@ -24,7 +24,7 @@ class BucketOperations:
 
     def run(self, operation, args = None):
         try:
-            operation(*args)
+            operation(*args) if args else operation()
         except ClientError as e:
             logging.error(e)
             return False
