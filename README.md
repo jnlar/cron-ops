@@ -4,7 +4,7 @@ AWS S3 CLI operations using [`boto3`](https://boto3.amazonaws.com/v1/documentati
 
 > You use the AWS SDK for Python (Boto3) to create, configure, and manage AWS services, such as Amazon Elastic Compute Cloud (Amazon EC2) and Amazon Simple Storage Service (Amazon S3). The SDK provides an object-oriented API as well as low-level access to AWS services.
 
-I use [Syncthing](https://syncthing.net/) to sync important files across devices. I don't want to deal with the send and receive only folders feature Syncthing offers[<sup>?</sup>](https://docs.syncthing.net/users/foldertypes.html#folder-types), as I want all synced devices to have write capability. So for redundancy, I use cron jobs to perform S3 operations.
+I use [Syncthing](https://syncthing.net/) to sync important files across devices. I don't want to deal with the send and receive only folders feature Syncthing offers[<sup>?</sup>](https://docs.syncthing.net/users/foldertypes.html#folder-types), as I want all synced devices to have write capability. So for redundancy, I automate backups using cron jobs.
 
 ### CLI
 
