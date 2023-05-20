@@ -16,11 +16,13 @@ Example:
 """
 class UploadCommand:
     def __init__(self):
-        self.parser = argparse.ArgumentParser(description='Upload a file to the S3 bucket')
+        self.parser = argparse.ArgumentParser(
+            description='Upload a file to the S3 bucket')
         self.logger = logging.getLogger(__name__)
 
     def build_args(self):
-        self.parser.add_argument('--bucket', '-b', dest='_bucket', help='ARN for s3 bucket or bucket name')
+        self.parser.add_argument(
+            '--bucket', '-b', dest='_bucket', help='ARN for s3 bucket or bucket name')
         self.parser.add_argument('--object', '-o', dest='object', help='Object path')
         self.parser.add_argument('--file', '-f', dest='file', help='File path')
 
@@ -49,7 +51,8 @@ class UploadCommand:
             return self.parser.print_help()
 
         if os.path.exists(args.file) is False:
-            return self.logger.error("File or directory does not exist: {}".format(args.file))
+            return self.logger.error(
+                "File or directory does not exist: {}".format(args.file))
 
         for type in ['file', 'object']:
             setattr(args, type, self.clean(getattr(args, type)))

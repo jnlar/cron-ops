@@ -8,11 +8,13 @@ Clean up old files from the S3 bucket
 """
 class CleanCommand:
     def __init__(self):
-        self.parser = argparse.ArgumentParser(description='Upload a file to the S3 bucket')
+        self.parser = argparse.ArgumentParser(
+            description='Upload a file to the S3 bucket')
         self.logger = logging.getLogger(__name__)
 
     def build_args(self):
-        self.parser.add_argument('--bucket', '-b', dest='_bucket', help='ARN for s3 bucket or bucket name')
+        self.parser.add_argument(
+            '--bucket', '-b', dest='_bucket', help='ARN for s3 bucket or bucket name')
         self.parser.add_argument('--prefix', '-p', dest='prefix', help='Prefix path')
         self.parser.add_argument('--limit', '-l', dest='limit', help='Limit timeframe')
 
